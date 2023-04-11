@@ -24,9 +24,9 @@ The vision-based perception for autonomous driving has undergone a transformatio
 
 ## Getting Started
 
-[1] Check [installation](docs/installation.md) for installation. Our code is mainly based on mmdetection3d.
+[1] Check [installation](docs/install.md) for installation. Our code is mainly based on mmdetection3d.
 
-[2] Check [data_preparation](docs/data_preparation.md) for preparing SemanticKITTI and nuScenes datasets.
+[2] Check [data_preparation](docs/prepare_dataset.md) for preparing SemanticKITTI and nuScenes datasets.
 
 [3] Check [train_and_eval](docs/train_and_eval.md) for training and evaluation.
 
