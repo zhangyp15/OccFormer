@@ -2,7 +2,7 @@
 
 ## News
 
-- **[2023/04/04]** Demo release.
+- **[2023/04/11]** Code and demo release.
 
 ## Demo
 
@@ -34,15 +34,17 @@ The vision-based perception for autonomous driving has undergone a transformatio
 
 [5] Check [test_submission](docs/test_submission.md) for preparing the test submission to [SemanticKITTI SSC](https://codalab.lisn.upsaclay.fr/competitions/7170) and [nuScenes LiDAR Segmentation](https://www.nuscenes.org/lidar-segmentation?externalData=all&mapData=all&modalities=Any).
 
-<!-- ## Model Zoo
+## Model Zoo
 
-We provide the pretrained weights on SemanticKITTI and nuScenes datasets.
+We provide the pretrained weights on SemanticKITTI and nuScenes datasets, reproduced with the released codebase.
 
 | Dataset | Backbone | SC IoU | SSC mIoU | LiDARSeg mIoU | Model Weights | Training Logs |
 |:----:|:----:|:----:|:----:|:----:|:----:|:----:|
-| [SemanticKITTI](projects/configs/occformer_kitti/occformer_kitti.py) | EfficientNetB7 | 36.50 | 13.46 | - | [Link]() | [Link]()
-| [nuScenes](projects/configs/occformer_nusc/occformer_nusc_r50_256x704.py) | R50 | - | - | 68.0 | [Link]() | [Link]()
-| [nuScenes](projects/configs/occformer_nusc/occformer_nusc_r101_896x1600.py) | R101-DCN | - | - | 70.4 | [Link]() | [Link]() -->
+| [SemanticKITTI](projects/configs/occformer_kitti/occformer_kitti.py) | EfficientNetB7 | 36.42(val), 34.46(test) | 13.50(val), 12.37(test) | - | [Link](https://github.com/zhangyp15/OccFormer/releases/download/assets/occformer_kitti.pth) | [Link](https://github.com/zhangyp15/OccFormer/releases/download/assets/occformer_kitti.log)
+| [nuScenes](projects/configs/occformer_nusc/occformer_nusc_r50_256x704.py) | R50 | - | - | 68.1 | [Link](https://github.com/zhangyp15/OccFormer/releases/download/assets/occformer_nusc_r50.pth) | [Link](https://github.com/zhangyp15/OccFormer/releases/download/assets/occformer_nusc_r50.log)
+| [nuScenes](projects/configs/occformer_nusc/occformer_nusc_r101_896x1600.py) | R101-DCN | - | - | 70.4 | [TODO] | [TODO]
+
+For SemanticKITTI dataset, the validation performance may fluctuate around 13.2 ~ 13.6 (SSC mIoU) considering the limited training samples. 
 
 ## Related Projects
 
