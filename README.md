@@ -2,6 +2,7 @@
 
 ## News
 
+- **[2023/04/12]** Paper is on [Arxiv](https://arxiv.org/abs/2304.05316).
 - **[2023/04/11]** Code and demo release.
 
 ## Demo
