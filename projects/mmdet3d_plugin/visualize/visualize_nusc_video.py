@@ -5,7 +5,7 @@ import cv2
 from PIL import Image
 from tqdm import tqdm
 from mayavi import mlab
-from visualize_nusc_release import draw_nusc_occupancy
+from visualize_nusc import draw_nusc_occupancy
 
 import mayavi
 mlab.options.offscreen = True
@@ -14,7 +14,8 @@ print("Set mlab.options.offscreen={}".format(mlab.options.offscreen))
 import pdb
 
 def make_scene_videos(image_files, video_file):
-	fps = 10
+	# fps = 10
+	fps = 5
 	size = [2930, 1640]
 	video = cv2.VideoWriter(
 		video_file, 
@@ -29,7 +30,7 @@ def make_scene_videos(image_files, video_file):
 		video.write(img)
 	
 	video.release()
-	cv2.destroyAllWindows()
+	# cv2.destroyAllWindows()
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description='')

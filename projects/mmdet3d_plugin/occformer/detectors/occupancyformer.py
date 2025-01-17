@@ -40,14 +40,14 @@ class OccupancyFormer(BEVDepth):
             torch.cuda.synchronize()
             t0 = time.time()
         
-        x = self.img_bev_encoder_backbone(x)
+        x = self.img_bev_encoder_backbone(x) #这个就是Dual-path Transformer Encoder
         
         if self.record_time:
             torch.cuda.synchronize()
             t1 = time.time()
             self.time_stats['bev_encoder'].append(t1 - t0)
         
-        x = self.img_bev_encoder_neck(x)
+        x = self.img_bev_encoder_neck(x) #Pixel Decoder
         
         if self.record_time:
             torch.cuda.synchronize()
@@ -63,7 +63,7 @@ class OccupancyFormer(BEVDepth):
             torch.cuda.synchronize()
             t0 = time.time()
                 
-        x = self.image_encoder(img[0])
+        x = self.image_encoder(img[0])  #输入是img[0],这是纯图片torch.Size([1, 6, 3, 256, 704])
         img_feats = x.clone()
         
         if self.record_time:
@@ -72,7 +72,7 @@ class OccupancyFormer(BEVDepth):
             self.time_stats['img_encoder'].append(t1 - t0)
 
         # img: imgs, rots, trans, intrins, post_rots, post_trans, gt_depths, sensor2sensors
-        rots, trans, intrins, post_rots, post_trans, bda = img[1:7]
+        rots, trans, intrins, post_rots, post_trans, bda = img[1:7] #img[0]是图片，torch.Size([1, 6, 3, 256, 704])
         
         mlp_input = self.img_view_transformer.get_mlp_input(rots, trans, intrins, post_rots, post_trans, bda)
         geo_inputs = [rots, trans, intrins, post_rots, post_trans, bda, mlp_input]
@@ -84,7 +84,7 @@ class OccupancyFormer(BEVDepth):
             t2 = time.time()
             self.time_stats['view_transformer'].append(t2 - t1)
         
-        x = self.bev_encoder(x)
+        x = self.bev_encoder(x) #这里开始进入Dual-path transformer结构
         if type(x) is not list:
             x = [x]
         
@@ -207,8 +207,9 @@ class OccupancyFormer(BEVDepth):
         return self.simple_test(img_metas, img_inputs, **kwargs)
     
     def simple_test(self, img_metas, img=None, rescale=False, points_occ=None, gt_occ=None, points_uv=None):
+        
         voxel_feats, img_feats, depth = self.extract_feat(points=None, img=img, img_metas=img_metas)        
-        output = self.pts_bbox_head.simple_test(
+        output = self.pts_bbox_head.simple_test(    #Transformer_decoder(Mask2former)
             voxel_feats=voxel_feats,
             points=points_occ,
             img_metas=img_metas,

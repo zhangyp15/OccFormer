@@ -1,0 +1,12 @@
+fsc_data/data/images_1
+fsc_data/data/images_3
+fsc_data/inf_result
+fsc_data/video
+
+data_info_pre_test/*
+
+gps_logger
+ckpts/occformer_nusc_r50.pth
+Visual/*
+prediction/*
+single_view_test_nus/*

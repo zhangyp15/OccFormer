@@ -717,7 +717,7 @@ class Mask2FormerNuscOccHead(MaskFormerHead):
             - mask_pred_results (Tensor): Mask logits, shape \
                 (batch_size, num_queries, h, w).
         """
-        all_cls_scores, all_mask_preds = self(voxel_feats, img_metas)
+        all_cls_scores, all_mask_preds = self(voxel_feats, img_metas)   #Mask2former
         mask_cls_results = all_cls_scores[-1]
         mask_pred_results = all_mask_preds[-1]
         

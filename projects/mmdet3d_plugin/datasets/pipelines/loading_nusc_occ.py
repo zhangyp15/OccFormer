@@ -14,7 +14,7 @@ import pdb
 class LoadNuscOccupancyAnnotations(object):
     def __init__(
             self,
-            data_root='data/nuscenes',
+            data_root='/home2/wzc/UniAD/data/nuscenes',
             is_train=False,
             is_test_submit=False,
             grid_size=None, 

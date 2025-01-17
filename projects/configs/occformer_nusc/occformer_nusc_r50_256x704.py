@@ -25,9 +25,8 @@ voxel_z = (point_cloud_range[5] - point_cloud_range[2]) / occ_size[2]
 voxel_size = [voxel_x, voxel_y, voxel_z]
 
 data_config={
-    'cams': ['CAM_FRONT_LEFT', 'CAM_FRONT', 'CAM_FRONT_RIGHT',
-             'CAM_BACK_LEFT', 'CAM_BACK', 'CAM_BACK_RIGHT'],
-    'Ncams': 6,
+    'cams': ['CAM_FRONT'],                                       #应该可以在这里配置，比方只用CAM_FRONT
+    'Ncams': 1,                                                  #这里也要修改成对应的CAM视角数量
     'input_size': (256, 704),
     'src_size': (900, 1600),
     # image-view augmentation
@@ -37,6 +36,20 @@ data_config={
     'crop_h': (0.0, 0.0),
     'resize_test': 0.00,
 }
+
+# data_config={
+#     'cams': ['CAM_FRONT_LEFT', 'CAM_FRONT', 'CAM_FRONT_RIGHT',
+#              'CAM_BACK_LEFT', 'CAM_BACK', 'CAM_BACK_RIGHT'],     #应该可以在这里配置，比方只用CAM_FRONT
+#     'Ncams': 6,                                                  #这里也要修改成对应的CAM视角数量
+#     'input_size': (256, 704),
+#     'src_size': (900, 1600),
+#     # image-view augmentation
+#     'resize': (-0.06, 0.11),
+#     'rot': (-5.4, 5.4),
+#     'flip': True,
+#     'crop_h': (0.0, 0.0),
+#     'resize_test': 0.00,
+# }
 
 grid_config = {
     'xbound': [point_cloud_range[0], point_cloud_range[3], voxel_x * lss_downsample[0]],
@@ -210,7 +223,7 @@ model = dict(
 )
 
 dataset_type = 'CustomNuScenesOccLSSDataset'
-data_root = 'data/nuscenes'
+data_root = '/home2/wzc/UniAD/data/nuscenes'
 nusc_class_metas = 'projects/configs/_base_/nuscenes.yaml'
 
 bda_aug_conf = dict(
@@ -254,7 +267,8 @@ input_modality = dict(
 test_config=dict(
     type=dataset_type,
     data_root=data_root,
-    ann_file='data/nuscenes_infos_temporal_val.pkl',
+    # ann_file='/home2/wzc/UniAD/data/occformer_infos/nuscenes_infos_temporal_val.pkl',
+    ann_file='/home2/wzc/OccFormer/fsc_data/data/infos/data_info_0_108.pkl',
     pipeline=test_pipeline,
     classes=class_names,
     modality=input_modality,
@@ -264,11 +278,11 @@ test_config=dict(
 
 data = dict(
     samples_per_gpu=1,
-    workers_per_gpu=4,
+    workers_per_gpu=0,
     train=dict(
         type=dataset_type,
         data_root=data_root,
-        ann_file='data/nuscenes_infos_temporal_train.pkl',
+        ann_file='/home2/wzc/UniAD/data/occformer_infos/nuscenes_infos_temporal_train.pkl',
         pipeline=train_pipeline,
         classes=class_names,
         modality=input_modality,

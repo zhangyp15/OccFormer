@@ -10,7 +10,8 @@ print("Set mlab.options.offscreen={}".format(mlab.options.offscreen))
 
 import pdb
 
-camera_names = ['CAM_FRONT_LEFT', 'CAM_FRONT', 'CAM_FRONT_RIGHT', 'CAM_BACK_LEFT', 'CAM_BACK', 'CAM_BACK_RIGHT']
+# camera_names = ['CAM_FRONT_LEFT', 'CAM_FRONT', 'CAM_FRONT_RIGHT', 'CAM_BACK_LEFT', 'CAM_BACK', 'CAM_BACK_RIGHT']
+camera_names = ['CAM_FRONT']
 colors = np.array(
 		[
 			[255, 120,  50, 255],       # barrier              orange
@@ -136,12 +137,14 @@ def draw_nusc_occupancy(
 	scene = figure.scene
 
 	os.makedirs(save_folder, exist_ok=True)
-	visualize_keys = ['CAM_FRONT_LEFT', 'CAM_FRONT', 'CAM_FRONT_RIGHT', 
-			'CAM_BACK_LEFT', 'CAM_BACK', 'CAM_BACK_RIGHT', 'DRIVING_VIEW', 'BIRD_EYE_VIEW']
+	# visualize_keys = ['CAM_FRONT_LEFT', 'CAM_FRONT', 'CAM_FRONT_RIGHT', 
+	# 		'CAM_BACK_LEFT', 'CAM_BACK', 'CAM_BACK_RIGHT', 'DRIVING_VIEW', 'BIRD_EYE_VIEW']
+	visualize_keys = ['CAM_FRONT', 'DRIVING_VIEW', 'BIRD_EYE_VIEW']
 	
-	for i in range(8):
+	#原本是range(8) ,就是上面这8个
+	for i in range(3):
 		# from six cameras
-		if i < 6:
+		if i < 1:  #i < 6
 			scene.camera.position = cam_positions[i] - np.array([0.7, 1.3, 0.])
 			scene.camera.focal_point = focal_positions[i] - np.array([0.7, 1.3, 0.])
 			scene.camera.view_angle = 35 if i != 3 else 60
@@ -151,7 +154,7 @@ def draw_nusc_occupancy(
 			scene.render()
 		
 		# bird-eye-view and facing front 
-		elif i == 6:
+		elif i == 1: #i == 6
 			scene.camera.position = [  0.75131739, -35.08337438,  16.71378558]
 			scene.camera.focal_point = [  0.75131739, -34.21734897,  16.21378558]
 			scene.camera.view_angle = 40.0
@@ -182,35 +185,41 @@ def draw_nusc_occupancy(
 
 	cam_w, cam_h = cam_img_size
 	pred_w, pred_h = pred_img_size
+	#----------这里设置最终可视化拼接图的尺寸-----------
 	result_w = cam_w * 6 + 5 * spacing
 	result_h = cam_h * 2 + pred_h + 2 * spacing
+	
 
+	#----------这里把预测结果的图用Image.open打开，并裁剪为上面自定义的cam_img_size尺寸，存在pred_imgs这个列表中-----------
 	pred_imgs = []
 	for cam_name in camera_names:
 		pred_img_file = os.path.join(save_folder, '{}.png'.format(cam_name))
 		pred_img = Image.open(pred_img_file).resize(cam_img_size, Image.BILINEAR)
 		pred_imgs.append(pred_img)
-
+	
+	#----------这里把其他两个视角的图用Image.open打开，并裁剪为自定义的尺寸-----------
 	drive_view_occ = Image.open(os.path.join(save_folder, 'DRIVING_VIEW.png')).resize(pred_img_size, Image.BILINEAR)
 	bev_occ = Image.open(os.path.join(save_folder, 'BIRD_EYE_VIEW.png')).resize(pred_img_size, Image.BILINEAR).crop([460, 0, 1460, 1080])
 
-	# create the output image
-	result = Image.new(pred_imgs[0].mode, (result_w, result_h), (0, 0, 0))
-	result.paste(input_imgs[0], box=(0, 0))
+	# create the output image，这里对最终可视化的图进行拼接，拼成最终的一个大图
+	result = Image.new(pred_imgs[0].mode, (result_w, result_h), (0, 0, 0)) #创建一个空白图，背景为为黑色 (0, 0, 0)
+	#----------以下是把上面裁剪好的图像依次粘贴到创建好的空白result上--------
+	# result.paste(input_imgs[0], box=(0, 0))  #input_imgs[0]是你要放的图，box=(0, 0)是图左上角的像素起点坐标
 	result.paste(input_imgs[1], box=(1*cam_w+1*spacing, 0))
-	result.paste(input_imgs[2], box=(2*cam_w+2*spacing, 0))
+	# result.paste(input_imgs[2], box=(2*cam_w+2*spacing, 0))
 
-	result.paste(input_imgs[3], box=(0, 1*cam_h+1*spacing))
-	result.paste(input_imgs[4], box=(1*cam_w+1*spacing, 1*cam_h+1*spacing))
-	result.paste(input_imgs[5], box=(2*cam_w+2*spacing, 1*cam_h+1*spacing))
+	# result.paste(input_imgs[3], box=(0, 1*cam_h+1*spacing))
+	# result.paste(input_imgs[4], box=(1*cam_w+1*spacing, 1*cam_h+1*spacing))
+	# result.paste(input_imgs[5], box=(2*cam_w+2*spacing, 1*cam_h+1*spacing))
 
-	result.paste(pred_imgs[0], box=(3*cam_w+3*spacing, 0))
-	result.paste(pred_imgs[1], box=(4*cam_w+4*spacing, 0))
-	result.paste(pred_imgs[2], box=(5*cam_w+5*spacing, 0))
+	result.paste(pred_imgs[0], box=(4*cam_w+4*spacing, 0))
+	# result.paste(pred_imgs[0], box=(3*cam_w+3*spacing, 0))
+	# result.paste(pred_imgs[1], box=(4*cam_w+4*spacing, 0))
+	# result.paste(pred_imgs[2], box=(5*cam_w+5*spacing, 0))
 
-	result.paste(pred_imgs[3], box=(3*cam_w+3*spacing, 1*cam_h+1*spacing))
-	result.paste(pred_imgs[4], box=(4*cam_w+4*spacing, 1*cam_h+1*spacing))
-	result.paste(pred_imgs[5], box=(5*cam_w+5*spacing, 1*cam_h+1*spacing))
+	# result.paste(pred_imgs[3], box=(3*cam_w+3*spacing, 1*cam_h+1*spacing))
+	# result.paste(pred_imgs[4], box=(4*cam_w+4*spacing, 1*cam_h+1*spacing))
+	# result.paste(pred_imgs[5], box=(5*cam_w+5*spacing, 1*cam_h+1*spacing))
 
 	result.paste(drive_view_occ, box=(0, 2*cam_h+2*spacing))
 	result.paste(bev_occ, box=(1*pred_w+1*spacing, 2*cam_h+2*spacing))

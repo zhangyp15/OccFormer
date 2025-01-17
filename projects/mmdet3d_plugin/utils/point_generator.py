@@ -31,7 +31,8 @@ class MlvlPointGenerator:
         return [1 for _ in range(len(self.strides))]
 
     def _meshgrid(self, x, y, z):
-        xx, yy, zz = torch.meshgrid(x, y, z, indexing='ij')
+        # xx, yy, zz = torch.meshgrid(x, y, z, indexing='ij')
+        xx, yy, zz = torch.meshgrid(x, y, z)
         
         return zz.reshape(-1), yy.reshape(-1), xx.reshape(-1)
 

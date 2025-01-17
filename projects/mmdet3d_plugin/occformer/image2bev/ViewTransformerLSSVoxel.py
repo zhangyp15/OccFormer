@@ -104,9 +104,9 @@ class ViewTransformerLiftSplatShootVoxel(ViewTransformerLSSBEVDepth):
 
         B, N, C, H, W = x.shape
         x = x.view(B * N, C, H, W)
-        x = self.depth_net(x, mlp_input)
-        depth_digit = x[:, :self.D, ...]
-        img_feat = x[:, self.D:self.D + self.numC_Trans, ...]
+        x = self.depth_net(x, mlp_input) #torch.Size([6, 240, 16, 44])
+        depth_digit = x[:, :self.D, ...]#depth Distribution: torch.Size([6, 112, 16, 44])
+        img_feat = x[:, self.D:self.D + self.numC_Trans, ...]  #Context feture: torch.Size([6, 128, 16, 44])
         depth_prob = self.get_depth_dist(depth_digit)
 
         # Lift

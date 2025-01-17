@@ -124,7 +124,9 @@ class ViewTransformerLiftSplatShoot(BaseModule):
         # undo post-transformation
         # B x N x D x H x W x 3
         points = self.frustum - post_trans.view(B, N, 1, 1, 1, 3)
-        points = torch.inverse(post_rots).view(B, N, 1, 1, 1, 3, 3).matmul(points.unsqueeze(-1))
+        # points = torch.inverse(post_rots).view(B, N, 1, 1, 1, 3, 3).matmul(points.unsqueeze(-1))
+        points = torch.inverse(post_rots.cpu()).view(B, N, 1, 1, 1, 3, 3).to(post_rots.device).matmul(points.unsqueeze(-1))
+
 
         # cam_to_ego
         points = torch.cat((points[:, :, :, :, :, :2] * points[:, :, :, :, :, 2:3],
@@ -136,7 +138,7 @@ class ViewTransformerLiftSplatShoot(BaseModule):
             points = points - shift.view(B, N, 1, 1, 1, 3, 1)
             intrins = intrins[:, :, :3, :3]
         
-        combine = rots.matmul(torch.inverse(intrins))
+        combine = rots.matmul(torch.inverse(intrins.cpu()).to(rots.device))
         points = combine.view(B, N, 1, 1, 1, 3, 3).matmul(points).squeeze(-1)
         points += trans.view(B, N, 1, 1, 1, 3)
         

@@ -70,8 +70,8 @@ class DualpathTransformerBlock(BaseModule):
         batch_size = x_bev.shape[0]
         
         x = rearrange(x, 'b c x y z -> (b z) c x y')
-        x = torch.cat((x_bev, x), dim=0)
-        x = self.bev_encoder(x) # relu output
+        x = torch.cat((x_bev, x), dim=0) #x是Local path那一路的输入，x_bev是Global path那一路的输入
+        x = self.bev_encoder(x) # relu output ； 经过这个Windowed Attention
         x_bev, x = x[:batch_size], x[batch_size:] 
         x = rearrange(x, '(b z) c x y -> b c x y z', b=batch_size)
         x_bev = self.aspp(x_bev)

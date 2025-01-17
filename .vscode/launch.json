@@ -1,0 +1,110 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Current File with Arguments",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": [
+                "${command:pickArgs}"
+            ]
+        },
+        {
+            "name": "Debug test.pys",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/tools/test.py", // 请确保路径正确
+            "console": "integratedTerminal",
+            "args": [
+                "./projects/configs/occformer_nusc/occformer_nusc_r50_256x704.py",
+                "./ckpts/occformer_nusc_r50.pth",
+                "--eval=bbox",
+                "--pred-save=/home2/wzc/OccFormer/fsc_data/inf_result/prediction",
+                "--cfg-options", "data.test.ann_file=/home2/wzc/OccFormer/fsc_data/data/infos/data_info_0_40.pkl"
+            ],
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}" // 可选，设置 Python 路径
+            },
+            "justMyCode": false // 允许调试库代码
+        },
+        {
+            "name": "Debug prepare_video_infos.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/projects/mmdet3d_plugin/tools/prepare_video_infos.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--src-path", "/home2/wzc/UniAD/data/occformer_infos/nuscenes_infos_temporal_val.pkl",
+                "--dst-path", "/home2/wzc/UniAD/data/occformer_infos/nuscenes_infos_temporal_val_visualize.pkl",
+                "--data-path", "/home2/wzc/UniAD/data/nuscenes"
+            ],
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "justMyCode": false
+        },
+        {
+            "name": "Debug visualize_nusc_video.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/projects/mmdet3d_plugin/visualize/visualize_nusc_video.py",
+            "console": "integratedTerminal",
+            "args": [
+                "/home2/wzc/OccFormer/single_view_test_nus/prediction",
+                "/home2/wzc/OccFormer/single_view_test_nus/visual",
+                "--scene-name", "scene-0012"
+            ],
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "justMyCode": false,
+            // "preLaunchTask": "Run with xvfb",
+        },
+        {
+            "name": "Debug create_data.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/tools/create_data.py",
+            "console": "integratedTerminal",
+            "args": [
+                "nuscenes",
+                "--root-path", "/home2/wzc/UniAD/data/nuscenes",
+                "--out-dir", "/home2/wzc/OccFormer/data_info_pre_test",
+                "--extra-tag", "nuscenes",
+                "--version", "v1.0",
+                "--canbus", "/home2/wzc/UniAD/data/nuscenes"
+            ],
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "justMyCode": false
+        }, 
+        {
+            "name": "Debug dist_test.sh",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/tools/test.py", // 请确保路径正确
+            "console": "integratedTerminal",
+            "args": [
+                "--nproc_per_node=1", // 设置 GPU 数量，这里设为1进行调试
+                "--master_port=29503", // 保持与 dist_test.sh 中的默认端口一致
+                "projects/configs/occformer_nusc/occformer_nusc_r50_256x704.py",
+                "/home2/wzc/OccFormer/ckpts/occformer_nusc_r50.pth",
+                "--launcher", "pytorch",
+                "--deterministic",
+                "--eval", "bbox",
+                "--pred-save", "/home2/wzc/OccFormer/fsc_data/inf_result/prediction",
+                "--cfg-options", "data.test.ann_file=/home2/wzc/OccFormer/fsc_data/data/infos/data_info_1.pkl"
+            ],
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}" // 可选，设置 Python 路径
+            },
+            "justMyCode": false // 允许调试库代码
+        },                                   
+    ]
+}

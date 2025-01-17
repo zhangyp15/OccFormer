@@ -28,14 +28,18 @@ def insert_sweeps(data_infos, data_path):
     # load sweep names & timestamps
     sweep_cams = []
     sweep_tss = []
+    min_length = 189171 # 以最短长度为准
+
     for cam_type in camera_names:
         dir = os.path.join(data_path, 'sweeps', cam_type)
         filenames = os.listdir(dir)
         files = [os.path.join(dir, fn) for fn in filenames]
         ts = [int(fn.split('__')[-1].split('.')[0]) for fn in filenames]
         idx = np.argsort(ts)
-        sweep_cams.append(np.array(files)[idx])
-        sweep_tss.append(np.array(ts)[idx])
+        # sweep_cams.append(np.array(files)[idx])
+        # sweep_tss.append(np.array(ts)[idx])
+        sweep_cams.append(np.array(files)[idx][:min_length])  # 截取到最短长度
+        sweep_tss.append(np.array(ts)[idx][:min_length])      # 截取到最短长度
     
     sweep_cams = np.array(sweep_cams)
     sweep_tss = np.array(sweep_tss)
